@@ -7,6 +7,24 @@ import time
 import random
 from utils.data_utils import read_client_data
 from utils.dlg import DLG
+import json
+import zlib
+
+
+def rng_snapshot(py_rng):
+    """State of every RNG that drives training: global torch, global NumPy, and the server's own
+    Python RNG. (The *global* Python `random` is deliberately excluded: wandb's background upload
+    thread calls random.random() for retry jitter, so it cannot be relied on.)"""
+    return torch.get_rng_state().clone(), np.random.get_state(), py_rng.getstate()
+
+
+def rng_crc(py_rng):
+    """Compact fingerprint of the training RNG state; paired runs must match round by round."""
+    t, n, p = rng_snapshot(py_rng)
+    crc = zlib.crc32(t.numpy().tobytes())
+    crc = zlib.crc32(np.asarray(n[1]).tobytes(), crc)
+    crc = zlib.crc32(repr(p).encode(), crc)
+    return crc
 
 
 class Server(object):
@@ -34,6 +52,9 @@ class Server(object):
         self.save_folder_name = args.save_folder_name
         self.top_cnt = args.top_cnt
         self.auto_break = args.auto_break
+        # Server-owned Python RNG (client upload order). Not the global `random`, which other
+        # threads (e.g. wandb retry jitter) can advance nondeterministically.
+        self.py_rng = random.Random(getattr(args, "seed", 0))
 
         self.clients = []
         self.selected_clients = []
@@ -114,7 +135,7 @@ class Server(object):
     def receive_models(self):
         assert (len(self.selected_clients) > 0)
 
-        active_clients = random.sample(
+        active_clients = self.py_rng.sample(
             self.selected_clients, int((1-self.client_drop_rate) * self.current_num_join_clients))
 
         self.uploaded_ids = []
@@ -251,6 +272,175 @@ class Server(object):
         # self.print_(test_acc, train_acc, train_loss)
         print("Std Test Accuracy: {:.4f}".format(np.std(accs)))
         print("Std Test AUC: {:.4f}".format(np.std(aucs)))
+
+    @torch.no_grad()
+    def evaluate_val(self, batch_size=256):
+        """Global model on the official PathMNIST validation split (server-held, clean).
+        Used only for model selection (rounds, mu, best round) - never for training."""
+        if not hasattr(self, "_val_data"):
+            from medmnist import PathMNIST
+            ds = PathMNIST(split="val", download=False, size=28,
+                           root=os.path.join("../dataset", self.dataset, "rawdata"))
+            x = torch.tensor(ds.imgs.transpose(0, 3, 1, 2).astype(np.float32) / 255.0)
+            y = torch.tensor(ds.labels.reshape(-1).astype(np.int64))
+            self._val_data = (x, y)
+        x_all, y_all = self._val_data
+        self.global_model.eval()
+        correct, loss_sum = 0, 0.0
+        for i in range(0, len(y_all), batch_size):
+            x = x_all[i:i + batch_size].to(self.device)
+            y = y_all[i:i + batch_size].to(self.device)
+            out = self.global_model(x)
+            loss_sum += torch.nn.functional.cross_entropy(out, y, reduction="sum").item()
+            correct += (out.argmax(1) == y).sum().item()
+        n = len(y_all)
+        return {"global_val_acc": correct / n, "global_val_loss": loss_sum / n}
+
+    def evaluate_metrics(self):
+        """Evaluate the current model held by every client (call after send_models()).
+        Global metrics are sample-weighted over all clients' test sets.
+        Guarded: evaluation must not advance any global RNG used by training."""
+        rng_before = rng_crc(self.py_rng)
+        metrics = {}
+        test_correct = test_n = test_loss = 0
+        train_n = train_loss = 0
+        for c in self.clients:
+            correct, n, loss_sum = c.clean_test_metrics()
+            metrics[f"client_{c.id}_test_acc"] = correct / n
+            metrics[f"client_{c.id}_test_loss"] = loss_sum / n
+            test_correct += correct; test_n += n; test_loss += loss_sum
+
+            tr_correct, tr_n, tr_loss_sum = c.train_loss_metrics()
+            metrics[f"client_{c.id}_train_loss"] = tr_loss_sum / tr_n
+            train_n += tr_n; train_loss += tr_loss_sum
+
+        metrics["global_test_acc"] = test_correct / test_n
+        metrics["global_test_loss"] = test_loss / test_n
+        metrics["global_train_loss"] = train_loss / train_n
+        if self.dataset == "PathMNIST":
+            metrics.update(self.evaluate_val())
+        for c in self.clients:
+            metrics.update(c.corrupted_subset_metrics())   # only the noisy client returns values
+
+        assert rng_crc(self.py_rng) == rng_before, "evaluation advanced a training RNG (would change training order)"
+
+        # keep PFLlib's history lists so save_results()/best-acc printing still work
+        self.rs_test_acc.append(metrics["global_test_acc"])
+        self.rs_train_loss.append(metrics["global_train_loss"])
+
+        print(f"global test acc {metrics['global_test_acc']:.4f} | "
+              f"test loss {metrics['global_test_loss']:.4f} | "
+              f"train loss {metrics['global_train_loss']:.4f} | "
+              f"val acc {metrics.get('global_val_acc', float('nan')):.4f}")
+
+        print("  per-client test acc: " + "  ".join(
+            f"c{c.id}={metrics[f'client_{c.id}_test_acc']:.4f}" for c in self.clients))
+        return metrics
+
+    @torch.no_grad()
+    def compute_update_stats(self):
+        """Call after receive_models() and BEFORE aggregate_parameters().
+        delta_i = theta_i - theta_global (model sent this round).
+        mean_delta = sum_i w_i * delta_i with w_i = n_i / sum(n) -> exactly the aggregated update.
+        client_i_cosine     = cos(delta_i, mean_delta)
+        client_i_cosine_loo = cos(delta_i, weighted mean of the OTHER clients' deltas)"""
+        def flatten(model):
+            return torch.cat([p.detach().reshape(-1).float() for p in model.parameters()])
+
+        global_vector = flatten(self.global_model)
+        deltas = [flatten(m) - global_vector for m in self.uploaded_models]
+
+        mean_delta = torch.zeros_like(global_vector)
+        for w, d in zip(self.uploaded_weights, deltas):
+            mean_delta += w * d
+        mean_norm = mean_delta.norm().item()
+
+        def cos(a, b):
+            if a.norm().item() > 0 and b.norm().item() > 0:
+                return torch.nn.functional.cosine_similarity(a, b, dim=0).item()
+            return float("nan")
+
+        metrics = {"global_update_norm": mean_norm}
+        for i, (cid, d) in enumerate(zip(self.uploaded_ids, deltas)):
+            metrics[f"client_{cid}_update_norm"] = d.norm().item()
+            metrics[f"client_{cid}_cosine"] = cos(d, mean_delta) if mean_norm > 0 else float("nan")
+
+            w_rest = 1.0 - self.uploaded_weights[i]
+            if w_rest > 0:
+                loo = (mean_delta - self.uploaded_weights[i] * d) / w_rest
+                metrics[f"client_{cid}_cosine_loo"] = cos(d, loo)
+            else:
+                metrics[f"client_{cid}_cosine_loo"] = float("nan")
+        return metrics
+
+    def log_round(self, metrics):
+        """Single sink for per-round metrics: history (-> metrics.csv), metrics.jsonl, W&B."""
+        if not hasattr(self, "history"):
+            self.history = []
+        self.history.append(metrics)
+        out = getattr(self, "output_dir", None)
+        if out:
+            with open(os.path.join(out, "metrics.jsonl"), "a") as f:
+                f.write(json.dumps(metrics) + "\n")
+        try:
+            import wandb
+            if wandb.run is not None:
+                wandb.log(metrics)
+        except ImportError:
+            pass
+
+    def run_rounds(self):
+        """Round 0 evaluates the initial model; then exactly global_rounds rounds of
+        train -> receive -> update stats -> aggregate -> evaluate new global model."""
+        self.current_round = 0
+        self.best_val_acc, self.best_val_round = -1.0, -1
+        self.send_models()
+        print("\n------------- Round 0 (initial model) -------------")
+        m0 = {"round": 0, "rng_state_crc": rng_crc(self.py_rng), **self.evaluate_metrics()}
+        self.log_round({**m0, **self._update_best_val(0, m0)})
+
+        self.Budget = []
+        for r in range(1, self.global_rounds + 1):
+            s_t = time.time()
+            self.current_round = r
+            print(f"\n------------- Round {r} -------------")
+            crc = rng_crc(self.py_rng)                     # RNG state at the start of this round
+
+            self.selected_clients = self.select_clients()
+            self.send_models()
+            for client in self.selected_clients:
+                client.train()
+
+            self.receive_models()
+            update_metrics = self.compute_update_stats()   # must be before aggregation
+            self.aggregate_parameters()
+            train_time = time.time() - s_t
+
+            self.send_models()                             # evaluation reads client.model
+            evaluation_metrics = self.evaluate_metrics()
+
+            best = self._update_best_val(r, evaluation_metrics)
+
+            self.Budget.append(time.time() - s_t)
+            self.log_round({"round": r, "rng_state_crc": crc,
+                            **evaluation_metrics, **update_metrics, **best,
+                            "round_train_time_sec": train_time,
+                            "round_total_time_sec": self.Budget[-1]})
+            print(f"round time {self.Budget[-1]:.1f}s (train+aggregate {train_time:.1f}s)")
+
+        print(f"\nFinal global test acc (round {self.global_rounds}): {self.rs_test_acc[-1]:.4f}")
+        print(f"Best val acc {self.best_val_acc:.4f} at round {self.best_val_round}")
+        print(f"Average time per round: {sum(self.Budget) / len(self.Budget):.1f}s")
+
+    def _update_best_val(self, r, metrics):
+        """Rolling best-validation checkpoint (strict improvement -> earliest round wins ties)."""
+        val = metrics.get("global_val_acc")
+        if val is not None and val > self.best_val_acc:
+            self.best_val_acc, self.best_val_round = val, r
+            out = getattr(self, "output_dir", None)
+            if out:
+                torch.save(self.global_model.state_dict(), os.path.join(out, "best_val_model.pt"))
+        return {"best_val_acc_so_far": self.best_val_acc, "best_val_round_so_far": self.best_val_round}
 
     def print_(self, test_acc, test_auc, train_loss):
         print("Average Test Accuracy: {:.4f}".format(test_acc))

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import copy
+import random
 import torch
 import argparse
 import os
@@ -8,6 +9,10 @@ import warnings
 import numpy as np
 import torchvision
 import logging
+import csv
+import json
+import subprocess
+import wandb
 
 from flcore.servers.serveravg import FedAvg
 from flcore.servers.serverpFedMe import pFedMe
@@ -65,8 +70,44 @@ logger = logging.getLogger()
 logger.setLevel(logging.ERROR)
 
 warnings.simplefilter("ignore")
-torch.manual_seed(0)
 
+def set_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+def get_git_commit():
+    try:
+        here = os.path.dirname(os.path.abspath(__file__))
+        return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=here).decode().strip()
+    except Exception:
+        return "unknown"
+
+
+def load_dataset_config(dataset):
+    path = os.path.join("../dataset", dataset, "config.json")
+    if os.path.exists(path):
+        with open(path) as f:
+            return json.load(f)
+    return {}
+
+
+def make_run_name(args):
+    name = args.algorithm.lower()
+    if args.algorithm == "FedProx":
+        name += f"_mu{args.mu}"
+    name += f"_seed{args.seed}"
+    if args.run_tag:
+        name += f"_{args.run_tag}"
+    return name
+
+
+def write_csv(history, path):
+    keys = ["round"] + sorted({k for row in history for k in row} - {"round"})
+    with open(path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=keys)
+        writer.writeheader()
+        writer.writerows(history)
 
 def run(args):
 
@@ -79,6 +120,27 @@ def run(args):
         print("Creating server and clients ...")
         start = time.time()
 
+        # ---- W&B run + output folder (before seeding / model creation) ----
+        run_name = make_run_name(args)
+        ds_cfg = load_dataset_config(args.dataset)
+        config = {k: v for k, v in vars(args).items() if k != "model"}
+        config.update({
+            "model": model_str,
+            "split_seed": ds_cfg.get("split_seed"),
+            "partition_alpha": ds_cfg.get("alpha"),
+            "normalization": ds_cfg.get("normalization"),
+            "pfllib_commit": get_git_commit(),
+            "noise_type": "symmetric, always-different: y -> (y + U{1..C-1}) mod C, train only",
+        })
+        wb_run = wandb.init(project=args.wandb_project, name=run_name, config=config)
+        wb_run.define_metric("round")
+        wb_run.define_metric("*", step_metric="round")
+        out_dir = os.path.join("..", "outputs", f"{run_name}_{wb_run.id}")
+        os.makedirs(out_dir, exist_ok=True)
+        print(f"W&B run: {run_name} ({wb_run.id})  ->  {out_dir}")
+
+        set_seed(args.seed)
+
         # Generate args.model
         if model_str == "MLR": # convex
             if "MNIST" in args.dataset:
@@ -89,7 +151,9 @@ def run(args):
                 args.model = Mclr_Logistic(60, num_classes=args.num_classes).to(args.device)
 
         elif model_str == "CNN": # non-convex
-            if "MNIST" in args.dataset:
+            if args.dataset == "PathMNIST":
+                args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=1024).to(args.device)
+            elif "MNIST" in args.dataset:
                 args.model = FedAvgCNN(in_features=1, num_classes=args.num_classes, dim=1024).to(args.device)
             elif "Cifar10" in args.dataset:
                 args.model = FedAvgCNN(in_features=3, num_classes=args.num_classes, dim=1600).to(args.device)
@@ -368,7 +432,27 @@ def run(args):
         else:
             raise NotImplementedError
 
+                # ---- record label corruption before training ----
+        server.output_dir = out_dir
+        noisy = server.clients[args.noisy_client]
+        noisy.get_train_data()   # applies (cached) corruption now, or draws hypothetical targets
+        n_corrupted = noisy.num_corrupted_labels()   # 0 for clean runs
+        noisy.save_noise_record(os.path.join(out_dir, "noise_indices.npz"))  # has 'applied' flag
+        extra = {"num_corrupted_labels": n_corrupted,
+                 "noise_applied": bool(noisy.noise_applied),
+                 "num_train_samples_noisy_client": len(noisy.get_train_data()),
+                 "device_used": str(args.device), "output_dir": out_dir}
+        wb_run.config.update(extra, allow_val_change=True)
+        with open(os.path.join(out_dir, "config.json"), "w") as f:
+            json.dump({**config, **extra, "wandb_run_id": wb_run.id, "wandb_run_name": run_name},
+                      f, indent=2, default=str)
+
         server.train()
+
+        # ---- local outputs ----
+        write_csv(server.history, os.path.join(out_dir, "metrics.csv"))
+        torch.save(server.global_model.state_dict(), os.path.join(out_dir, "final_model.pt"))
+        wb_run.finish()
 
         time_list.append(time.time()-start)
 
@@ -391,7 +475,7 @@ if __name__ == "__main__":
     parser.add_argument('-go', "--goal", type=str, default="test", 
                         help="The goal for this experiment")
     parser.add_argument('-dev', "--device", type=str, default="cuda",
-                        choices=["cpu", "cuda"])
+                        choices=["cpu", "cuda", "mps"])
     parser.add_argument('-did', "--device_id", type=str, default="0")
     parser.add_argument('-data', "--dataset", type=str, default="MNIST")
     parser.add_argument('-ncl', "--num_classes", type=int, default=10)
@@ -498,6 +582,16 @@ if __name__ == "__main__":
     parser.add_argument('-ca', "--fedcross_alpha", type=float, default=0.99)
     parser.add_argument('-cmss', "--collaberative_model_select_strategy", type=int, default=1)
 
+    # PathMNIST noisy-client experiment
+    parser.add_argument("--seed", type=int, default=0,
+                        help="training + label-noise seed (partition seed is fixed in dataset config)")
+    parser.add_argument("--noisy_client", type=int, default=0)
+    parser.add_argument("--noise_rate", type=float, default=0.4)
+    parser.add_argument("--diag_noise_rate", type=float, default=0.4,
+                        help="clean runs only: rate of HYPOTHETICAL (not applied) corruption targets "
+                             "drawn with the same seed, for the corrupted-subset diagnostic")
+    parser.add_argument("--wandb_project", type=str, default="fl-pathmnist-noisy")
+    parser.add_argument("--run_tag", type=str, default="")
 
     args = parser.parse_args()
 
@@ -506,6 +600,13 @@ if __name__ == "__main__":
     if args.device == "cuda" and not torch.cuda.is_available():
         print("\ncuda is not avaiable.\n")
         args.device = "cpu"
+    if args.device == "mps" and not torch.backends.mps.is_available():
+        print("\nmps is not available.\n")
+        args.device = "cpu"
+
+    assert 0 <= args.noise_rate <= 1, "noise_rate must be in [0, 1]"
+    assert 0 <= args.noisy_client < args.num_clients, "noisy_client out of range"
+
 
     print("=" * 50)
     for arg in vars(args):

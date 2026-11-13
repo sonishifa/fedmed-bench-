@@ -1,0 +1,1164 @@
+==================================================
+goal = test
+device = cpu
+device_id = 0
+dataset = PathMNIST
+num_classes = 9
+model = CNN
+batch_size = 32
+local_learning_rate = 0.01
+learning_rate_decay = False
+learning_rate_decay_gamma = 0.99
+global_rounds = 200
+top_cnt = 100
+local_epochs = 1
+algorithm = FedProx
+join_ratio = 1.0
+random_join_ratio = False
+num_clients = 5
+prev = 0
+times = 1
+eval_gap = 1
+save_folder_name = items
+auto_break = False
+dlg_eval = False
+dlg_gap = 100
+batch_num_per_client = 2
+num_new_clients = 0
+fine_tuning_epoch_new = 0
+feature_dim = 512
+vocab_size = 80
+max_len = 200
+few_shot = 0
+client_drop_rate = 0.0
+train_slow_rate = 0.0
+send_slow_rate = 0.0
+time_select = False
+time_threthold = 10000
+beta = 0.0
+lamda = 1.0
+mu = 1.0
+K = 5
+p_learning_rate = 0.01
+M = 5
+itk = 4000
+alphaK = 1.0
+sigma = 1.0
+alpha = 1.0
+plocal_epochs = 1
+tau = 1.0
+fine_tuning_epochs = 10
+dr_learning_rate = 0.0
+L = 1.0
+noise_dim = 512
+generator_learning_rate = 0.005
+hidden_dim = 512
+server_epochs = 1000
+localize_feature_extractor = False
+server_learning_rate = 1.0
+eta = 1.0
+rand_percent = 80
+layer_idx = 2
+mentee_learning_rate = 0.005
+T_start = 0.95
+T_end = 0.98
+momentum = 0.1
+kl_weight = 0.0
+first_stage_bound = 0
+fedcross_alpha = 0.99
+collaberative_model_select_strategy = 1
+seed = 0
+noisy_client = 0
+noise_rate = 0.4
+diag_noise_rate = 0.4
+wandb_project = fl-pathmnist-noisy
+run_tag = 
+==================================================
+
+============= Running time: 0th =============
+Creating server and clients ...
+wandb: [wandb.login()] Loaded credentials for https://api.forge.coreweave.com from /Users/shifasoni/.netrc.
+wandb: Currently logged in as: sonishifa7 (sonishifa7-jk-lakshmipat-university) to https://api.forge.coreweave.com. Use `wandb login --relogin` to force relogin
+wandb: setting up run th13mcnt
+wandb: Tracking run with wandb version 0.31.0
+wandb: Run data is saved locally in /Users/shifasoni/Documents/fedmed-bench-/PFLlib/system/wandb/run-20261112_115100-th13mcnt
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fedprox_mu1.0_seed0
+wandb: ⭐️ View project at https://forge.coreweave.com/wandb/sonishifa7-jk-lakshmipat-university/fl-pathmnist-noisy
+wandb: 🚀 View run at https://forge.coreweave.com/wandb/sonishifa7-jk-lakshmipat-university/fl-pathmnist-noisy/runs/th13mcnt
+W&B run: fedprox_mu1.0_seed0 (th13mcnt)  ->  ../outputs/fedprox_mu1.0_seed0_th13mcnt
+FedAvgCNN(
+  (conv1): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(5, 5), stride=(1, 1))
+    (1): ReLU(inplace=True)
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), padding=0, dilation=1, ceil_mode=False)
+  )
+  (conv2): Sequential(
+    (0): Conv2d(32, 64, kernel_size=(5, 5), stride=(1, 1))
+    (1): ReLU(inplace=True)
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), padding=0, dilation=1, ceil_mode=False)
+  )
+  (fc1): Sequential(
+    (0): Linear(in_features=1024, out_features=512, bias=True)
+    (1): ReLU(inplace=True)
+  )
+  (fc): Linear(in_features=512, out_features=9, bias=True)
+)
+
+Join ratio / total clients: 1.0 / 5
+Finished creating server and clients.
+[noise] client 0: corrupted 9626/24067 training labels (rate=0.4, seed=0)
+
+------------- Round 0 (initial model) -------------
+global test acc 0.1033 | test loss 2.2023 | train loss 2.1991 | val acc 0.0883
+  per-client test acc: c0=0.0156  c1=0.3960  c2=0.0011  c3=0.1158  c4=0.0000
+
+------------- Round 1 -------------
+global test acc 0.2089 | test loss 2.2706 | train loss 2.2143 | val acc 0.1905
+  per-client test acc: c0=0.2410  c1=0.2210  c2=0.1314  c3=0.5955  c4=0.0830
+round time 24.5s (train+aggregate 17.9s)
+
+------------- Round 2 -------------
+global test acc 0.1728 | test loss 2.3460 | train loss 2.2465 | val acc 0.1853
+  per-client test acc: c0=0.0318  c1=0.0633  c2=0.1569  c3=0.5579  c4=0.2905
+round time 24.6s (train+aggregate 18.0s)
+
+------------- Round 3 -------------
+global test acc 0.1180 | test loss 2.3520 | train loss 2.2551 | val acc 0.1057
+  per-client test acc: c0=0.0318  c1=0.0410  c2=0.1319  c3=0.5549  c4=0.0823
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 4 -------------
+global test acc 0.1180 | test loss 2.4213 | train loss 2.2862 | val acc 0.1057
+  per-client test acc: c0=0.0318  c1=0.0410  c2=0.1319  c3=0.5549  c4=0.0823
+round time 25.6s (train+aggregate 18.7s)
+
+------------- Round 5 -------------
+global test acc 0.0826 | test loss 2.3931 | train loss 2.2583 | val acc 0.1367
+  per-client test acc: c0=0.0000  c1=0.0335  c2=0.0394  c3=0.0060  c4=0.3106
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 6 -------------
+global test acc 0.1584 | test loss 2.3818 | train loss 2.2561 | val acc 0.1699
+  per-client test acc: c0=0.0318  c1=0.0577  c2=0.1480  c3=0.5579  c4=0.2376
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 7 -------------
+global test acc 0.1517 | test loss 2.3678 | train loss 2.2450 | val acc 0.1803
+  per-client test acc: c0=0.0143  c1=0.0577  c2=0.1164  c3=0.3489  c4=0.3554
+round time 25.7s (train+aggregate 18.7s)
+
+------------- Round 8 -------------
+global test acc 0.2004 | test loss 2.2072 | train loss 2.1902 | val acc 0.1977
+  per-client test acc: c0=0.0318  c1=0.0739  c2=0.1713  c3=0.5609  c4=0.3929
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 9 -------------
+global test acc 0.1430 | test loss 2.1941 | train loss 2.1713 | val acc 0.1418
+  per-client test acc: c0=0.0318  c1=0.0509  c2=0.1419  c3=0.5564  c4=0.1794
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 10 -------------
+global test acc 0.2462 | test loss 2.0637 | train loss 2.1085 | val acc 0.2190
+  per-client test acc: c0=0.0436  c1=0.0788  c2=0.2007  c3=0.5609  c4=0.5596
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 11 -------------
+global test acc 0.2408 | test loss 2.0191 | train loss 2.0910 | val acc 0.2228
+  per-client test acc: c0=0.0430  c1=0.0782  c2=0.1979  c3=0.5609  c4=0.5382
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 12 -------------
+global test acc 0.2914 | test loss 1.9614 | train loss 2.0860 | val acc 0.2175
+  per-client test acc: c0=0.0592  c1=0.0844  c2=0.2300  c3=0.5609  c4=0.7182
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 13 -------------
+global test acc 0.3028 | test loss 1.9010 | train loss 2.0471 | val acc 0.2320
+  per-client test acc: c0=0.0616  c1=0.0857  c2=0.2373  c3=0.5609  c4=0.7604
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 14 -------------
+global test acc 0.3042 | test loss 1.8706 | train loss 2.0012 | val acc 0.2267
+  per-client test acc: c0=0.0604  c1=0.0869  c2=0.2384  c3=0.5609  c4=0.7657
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 15 -------------
+global test acc 0.4198 | test loss 1.7881 | train loss 1.9610 | val acc 0.2694
+  per-client test acc: c0=0.0704  c1=0.0912  c2=0.6059  c3=0.5609  c4=0.8621
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 16 -------------
+global test acc 0.4325 | test loss 1.7885 | train loss 1.9134 | val acc 0.2575
+  per-client test acc: c0=0.0685  c1=0.0888  c2=0.6696  c3=0.5609  c4=0.8507
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 17 -------------
+global test acc 0.3047 | test loss 1.7855 | train loss 1.8706 | val acc 0.2378
+  per-client test acc: c0=0.0623  c1=0.0850  c2=0.2339  c3=0.5609  c4=0.7738
+round time 25.7s (train+aggregate 18.8s)
+
+------------- Round 18 -------------
+global test acc 0.3134 | test loss 1.8208 | train loss 1.8697 | val acc 0.2396
+  per-client test acc: c0=0.0641  c1=0.0857  c2=0.2417  c3=0.5609  c4=0.8032
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 19 -------------
+global test acc 0.3058 | test loss 1.8015 | train loss 1.8560 | val acc 0.2396
+  per-client test acc: c0=0.0623  c1=0.0863  c2=0.2389  c3=0.5609  c4=0.7718
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 20 -------------
+global test acc 0.2795 | test loss 1.7927 | train loss 1.8354 | val acc 0.2513
+  per-client test acc: c0=0.0560  c1=0.0819  c2=0.2167  c3=0.5609  c4=0.6834
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 21 -------------
+global test acc 0.2526 | test loss 1.7802 | train loss 1.8250 | val acc 0.2419
+  per-client test acc: c0=0.0504  c1=0.0801  c2=0.2057  c3=0.5609  c4=0.5756
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 22 -------------
+global test acc 0.2160 | test loss 1.7713 | train loss 1.8143 | val acc 0.2839
+  per-client test acc: c0=0.0573  c1=0.0764  c2=0.1768  c3=0.5639  c4=0.4297
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 23 -------------
+global test acc 0.2531 | test loss 1.7336 | train loss 1.8105 | val acc 0.2932
+  per-client test acc: c0=0.1177  c1=0.0745  c2=0.1918  c3=0.5684  c4=0.5248
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 24 -------------
+global test acc 0.2836 | test loss 1.7192 | train loss 1.7895 | val acc 0.3168
+  per-client test acc: c0=0.0928  c1=0.0838  c2=0.2129  c3=0.5669  c4=0.6633
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 25 -------------
+global test acc 0.2380 | test loss 1.7918 | train loss 1.8145 | val acc 0.3033
+  per-client test acc: c0=0.0691  c1=0.0776  c2=0.1863  c3=0.5624  c4=0.5107
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 26 -------------
+global test acc 0.2657 | test loss 1.7406 | train loss 1.7893 | val acc 0.3165
+  per-client test acc: c0=0.0859  c1=0.0826  c2=0.2051  c3=0.5639  c4=0.5971
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 27 -------------
+global test acc 0.2727 | test loss 1.7182 | train loss 1.7722 | val acc 0.3040
+  per-client test acc: c0=0.0679  c1=0.0838  c2=0.2145  c3=0.5609  c4=0.6386
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 28 -------------
+global test acc 0.2467 | test loss 1.7437 | train loss 1.7871 | val acc 0.3183
+  per-client test acc: c0=0.1445  c1=0.0962  c2=0.1818  c3=0.5729  c4=0.4518
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 29 -------------
+global test acc 0.2749 | test loss 1.7027 | train loss 1.7489 | val acc 0.3308
+  per-client test acc: c0=0.0978  c1=0.0875  c2=0.2062  c3=0.5654  c4=0.6212
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 30 -------------
+global test acc 0.2815 | test loss 1.7239 | train loss 1.7632 | val acc 0.3312
+  per-client test acc: c0=0.1519  c1=0.0987  c2=0.1996  c3=0.5714  c4=0.5877
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 31 -------------
+global test acc 0.2783 | test loss 1.7076 | train loss 1.7399 | val acc 0.3298
+  per-client test acc: c0=0.1021  c1=0.1049  c2=0.2062  c3=0.5654  c4=0.6138
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 32 -------------
+global test acc 0.3054 | test loss 1.6622 | train loss 1.7301 | val acc 0.3390
+  per-client test acc: c0=0.1432  c1=0.0975  c2=0.2195  c3=0.5714  c4=0.6894
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 33 -------------
+global test acc 0.3006 | test loss 1.6476 | train loss 1.7108 | val acc 0.3370
+  per-client test acc: c0=0.1245  c1=0.1037  c2=0.2129  c3=0.5654  c4=0.6901
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 34 -------------
+global test acc 0.2854 | test loss 1.7002 | train loss 1.7335 | val acc 0.3273
+  per-client test acc: c0=0.1015  c1=0.1074  c2=0.2129  c3=0.5624  c4=0.6392
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 35 -------------
+global test acc 0.3011 | test loss 1.6857 | train loss 1.7223 | val acc 0.3551
+  per-client test acc: c0=0.1675  c1=0.1558  c2=0.2045  c3=0.5729  c4=0.5971
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 36 -------------
+global test acc 0.3072 | test loss 1.6882 | train loss 1.7252 | val acc 0.3555
+  per-client test acc: c0=0.2086  c1=0.1527  c2=0.2023  c3=0.5774  c4=0.5863
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 37 -------------
+global test acc 0.3242 | test loss 1.6298 | train loss 1.6943 | val acc 0.3857
+  per-client test acc: c0=0.2746  c1=0.1968  c2=0.1984  c3=0.6361  c4=0.5281
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 38 -------------
+global test acc 0.3689 | test loss 1.6336 | train loss 1.7246 | val acc 0.3575
+  per-client test acc: c0=0.3468  c1=0.2197  c2=0.2112  c3=0.5789  c4=0.6506
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 39 -------------
+global test acc 0.3050 | test loss 1.6646 | train loss 1.6969 | val acc 0.3417
+  per-client test acc: c0=0.1382  c1=0.1186  c2=0.2145  c3=0.5699  c4=0.6767
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 40 -------------
+global test acc 0.3487 | test loss 1.6194 | train loss 1.6728 | val acc 0.3768
+  per-client test acc: c0=0.2516  c1=0.1906  c2=0.2162  c3=0.5774  c4=0.6821
+round time 25.8s (train+aggregate 18.9s)
+
+------------- Round 41 -------------
+global test acc 0.3627 | test loss 1.6372 | train loss 1.6831 | val acc 0.3871
+  per-client test acc: c0=0.3194  c1=0.2328  c2=0.2112  c3=0.5820  c4=0.6345
+round time 25.6s (train+aggregate 18.6s)
+
+------------- Round 42 -------------
+global test acc 0.3641 | test loss 1.5841 | train loss 1.6615 | val acc 0.3848
+  per-client test acc: c0=0.3225  c1=0.2272  c2=0.2134  c3=0.5835  c4=0.6406
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 43 -------------
+global test acc 0.3745 | test loss 1.6280 | train loss 1.6757 | val acc 0.3842
+  per-client test acc: c0=0.3045  c1=0.2235  c2=0.2201  c3=0.5759  c4=0.7095
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 44 -------------
+global test acc 0.3845 | test loss 1.5708 | train loss 1.6613 | val acc 0.3968
+  per-client test acc: c0=0.3692  c1=0.2694  c2=0.2134  c3=0.5880  c4=0.6412
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 45 -------------
+global test acc 0.3365 | test loss 1.5780 | train loss 1.6588 | val acc 0.4021
+  per-client test acc: c0=0.3680  c1=0.2545  c2=0.1857  c3=0.6662  c4=0.4264
+round time 25.8s (train+aggregate 18.7s)
+
+------------- Round 46 -------------
+global test acc 0.3393 | test loss 1.6726 | train loss 1.6845 | val acc 0.3693
+  per-client test acc: c0=0.2497  c1=0.1788  c2=0.2123  c3=0.5820  c4=0.6539
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 47 -------------
+global test acc 0.3397 | test loss 1.6198 | train loss 1.7446 | val acc 0.3502
+  per-client test acc: c0=0.3337  c1=0.1899  c2=0.1951  c3=0.7414  c4=0.5033
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 48 -------------
+global test acc 0.3614 | test loss 1.6092 | train loss 1.6679 | val acc 0.3703
+  per-client test acc: c0=0.2677  c1=0.1657  c2=0.2267  c3=0.5759  c4=0.7403
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 49 -------------
+global test acc 0.3795 | test loss 1.6711 | train loss 1.6739 | val acc 0.4237
+  per-client test acc: c0=0.3593  c1=0.2744  c2=0.2073  c3=0.6165  c4=0.6171
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 50 -------------
+global test acc 0.3529 | test loss 1.6073 | train loss 1.6507 | val acc 0.3890
+  per-client test acc: c0=0.2771  c1=0.2204  c2=0.2134  c3=0.5774  c4=0.6459
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 51 -------------
+global test acc 0.3641 | test loss 1.5270 | train loss 1.6231 | val acc 0.3752
+  per-client test acc: c0=0.2540  c1=0.1707  c2=0.2300  c3=0.5729  c4=0.7597
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 52 -------------
+global test acc 0.3903 | test loss 1.5702 | train loss 1.6267 | val acc 0.4010
+  per-client test acc: c0=0.3306  c1=0.2483  c2=0.2223  c3=0.5820  c4=0.7249
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 53 -------------
+global test acc 0.3781 | test loss 1.5763 | train loss 1.6361 | val acc 0.3831
+  per-client test acc: c0=0.3169  c1=0.2048  c2=0.2217  c3=0.5805  c4=0.7296
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 54 -------------
+global test acc 0.3975 | test loss 1.5244 | train loss 1.6228 | val acc 0.4027
+  per-client test acc: c0=0.3935  c1=0.2719  c2=0.2190  c3=0.5835  c4=0.6700
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 55 -------------
+global test acc 0.3875 | test loss 1.5153 | train loss 1.5914 | val acc 0.3977
+  per-client test acc: c0=0.3039  c1=0.2514  c2=0.2267  c3=0.5774  c4=0.7336
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 56 -------------
+global test acc 0.3891 | test loss 1.5177 | train loss 1.5961 | val acc 0.4058
+  per-client test acc: c0=0.3344  c1=0.2483  c2=0.2256  c3=0.5774  c4=0.7135
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 57 -------------
+global test acc 0.3808 | test loss 1.5677 | train loss 1.6114 | val acc 0.4033
+  per-client test acc: c0=0.3512  c1=0.2464  c2=0.2151  c3=0.5805  c4=0.6687
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 58 -------------
+global test acc 0.4092 | test loss 1.4113 | train loss 1.5846 | val acc 0.4157
+  per-client test acc: c0=0.4097  c1=0.3042  c2=0.2478  c3=0.5955  c4=0.6339
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 59 -------------
+global test acc 0.4003 | test loss 1.4691 | train loss 1.5884 | val acc 0.4231
+  per-client test acc: c0=0.4247  c1=0.3004  c2=0.2173  c3=0.5880  c4=0.6191
+round time 25.8s (train+aggregate 18.9s)
+
+------------- Round 60 -------------
+global test acc 0.3614 | test loss 1.4717 | train loss 1.5892 | val acc 0.4299
+  per-client test acc: c0=0.4589  c1=0.3209  c2=0.1802  c3=0.6647  c4=0.3842
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 61 -------------
+global test acc 0.4150 | test loss 1.5277 | train loss 1.5847 | val acc 0.4494
+  per-client test acc: c0=0.4259  c1=0.3476  c2=0.2106  c3=0.5865  c4=0.6466
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 62 -------------
+global test acc 0.3831 | test loss 1.5588 | train loss 1.5953 | val acc 0.4221
+  per-client test acc: c0=0.3300  c1=0.2849  c2=0.2151  c3=0.5835  c4=0.6600
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 63 -------------
+global test acc 0.4191 | test loss 1.5259 | train loss 1.5777 | val acc 0.4451
+  per-client test acc: c0=0.4253  c1=0.3135  c2=0.2173  c3=0.5774  c4=0.6995
+round time 26.2s (train+aggregate 19.1s)
+
+------------- Round 64 -------------
+global test acc 0.3848 | test loss 1.5454 | train loss 1.5902 | val acc 0.4360
+  per-client test acc: c0=0.3941  c1=0.2843  c2=0.2123  c3=0.5925  c4=0.5991
+round time 26.5s (train+aggregate 19.3s)
+
+------------- Round 65 -------------
+global test acc 0.4136 | test loss 1.4412 | train loss 1.5406 | val acc 0.4627
+  per-client test acc: c0=0.4259  c1=0.3569  c2=0.2134  c3=0.5955  c4=0.6225
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 66 -------------
+global test acc 0.3989 | test loss 1.5589 | train loss 1.6122 | val acc 0.4066
+  per-client test acc: c0=0.3406  c1=0.2216  c2=0.2323  c3=0.5774  c4=0.7744
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 67 -------------
+global test acc 0.4104 | test loss 1.4967 | train loss 1.5748 | val acc 0.4365
+  per-client test acc: c0=0.4128  c1=0.3277  c2=0.2173  c3=0.5940  c4=0.6486
+round time 25.7s (train+aggregate 18.7s)
+
+------------- Round 68 -------------
+global test acc 0.4292 | test loss 1.4961 | train loss 1.5629 | val acc 0.4672
+  per-client test acc: c0=0.4489  c1=0.3991  c2=0.2129  c3=0.6015  c4=0.6252
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 69 -------------
+global test acc 0.4086 | test loss 1.4790 | train loss 1.5729 | val acc 0.4351
+  per-client test acc: c0=0.4209  c1=0.3011  c2=0.2201  c3=0.5985  c4=0.6546
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 70 -------------
+global test acc 0.4311 | test loss 1.4847 | train loss 1.5524 | val acc 0.4580
+  per-client test acc: c0=0.4396  c1=0.3513  c2=0.2212  c3=0.5880  c4=0.6914
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 71 -------------
+global test acc 0.4309 | test loss 1.5310 | train loss 1.5748 | val acc 0.4477
+  per-client test acc: c0=0.4452  c1=0.3600  c2=0.2173  c3=0.5910  c4=0.6787
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 72 -------------
+global test acc 0.3955 | test loss 1.4743 | train loss 1.5507 | val acc 0.4181
+  per-client test acc: c0=0.3418  c1=0.2657  c2=0.2356  c3=0.5774  c4=0.7055
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 73 -------------
+global test acc 0.4235 | test loss 1.5171 | train loss 1.5648 | val acc 0.4350
+  per-client test acc: c0=0.4315  c1=0.3184  c2=0.2201  c3=0.5880  c4=0.7008
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 74 -------------
+global test acc 0.4131 | test loss 1.4749 | train loss 1.5385 | val acc 0.4351
+  per-client test acc: c0=0.4085  c1=0.3091  c2=0.2228  c3=0.5865  c4=0.6827
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 75 -------------
+global test acc 0.3981 | test loss 1.6275 | train loss 1.6179 | val acc 0.4114
+  per-client test acc: c0=0.3661  c1=0.2564  c2=0.2223  c3=0.5774  c4=0.7175
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 76 -------------
+global test acc 0.4382 | test loss 1.4848 | train loss 1.5474 | val acc 0.4602
+  per-client test acc: c0=0.4658  c1=0.3718  c2=0.2184  c3=0.5925  c4=0.6767
+round time 25.8s (train+aggregate 18.9s)
+
+------------- Round 77 -------------
+global test acc 0.3911 | test loss 1.3770 | train loss 1.5107 | val acc 0.4769
+  per-client test acc: c0=0.4651  c1=0.3402  c2=0.2239  c3=0.6662  c4=0.4458
+round time 25.9s (train+aggregate 18.8s)
+
+------------- Round 78 -------------
+global test acc 0.3797 | test loss 1.5684 | train loss 1.5747 | val acc 0.4600
+  per-client test acc: c0=0.4066  c1=0.3302  c2=0.1962  c3=0.5850  c4=0.5341
+round time 26.1s (train+aggregate 19.1s)
+
+------------- Round 79 -------------
+global test acc 0.4149 | test loss 1.5079 | train loss 1.5517 | val acc 0.4391
+  per-client test acc: c0=0.4041  c1=0.3222  c2=0.2195  c3=0.5850  c4=0.6867
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 80 -------------
+global test acc 0.4348 | test loss 1.4828 | train loss 1.5383 | val acc 0.4575
+  per-client test acc: c0=0.4296  c1=0.3749  c2=0.2206  c3=0.5940  c4=0.6928
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 81 -------------
+global test acc 0.4121 | test loss 1.4828 | train loss 1.5408 | val acc 0.4563
+  per-client test acc: c0=0.4215  c1=0.2924  c2=0.2206  c3=0.5895  c4=0.6834
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 82 -------------
+global test acc 0.3865 | test loss 1.5545 | train loss 1.5614 | val acc 0.4829
+  per-client test acc: c0=0.4502  c1=0.3954  c2=0.1840  c3=0.6677  c4=0.4277
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 83 -------------
+global test acc 0.4130 | test loss 1.4433 | train loss 1.5763 | val acc 0.4381
+  per-client test acc: c0=0.4321  c1=0.3060  c2=0.2212  c3=0.5985  c4=0.6566
+round time 25.8s (train+aggregate 18.9s)
+
+------------- Round 84 -------------
+global test acc 0.3982 | test loss 1.4069 | train loss 1.5014 | val acc 0.4849
+  per-client test acc: c0=0.4795  c1=0.3631  c2=0.1946  c3=0.6677  c4=0.4746
+round time 25.9s (train+aggregate 18.8s)
+
+------------- Round 85 -------------
+global test acc 0.4354 | test loss 1.4628 | train loss 1.5148 | val acc 0.4639
+  per-client test acc: c0=0.4371  c1=0.3433  c2=0.2234  c3=0.5940  c4=0.7182
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 86 -------------
+global test acc 0.4079 | test loss 1.5108 | train loss 1.5392 | val acc 0.4540
+  per-client test acc: c0=0.4284  c1=0.3104  c2=0.2151  c3=0.5835  c4=0.6459
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 87 -------------
+global test acc 0.3997 | test loss 1.4406 | train loss 1.5215 | val acc 0.4851
+  per-client test acc: c0=0.5367  c1=0.3966  c2=0.1835  c3=0.6647  c4=0.3989
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 88 -------------
+global test acc 0.4258 | test loss 1.4277 | train loss 1.5029 | val acc 0.4805
+  per-client test acc: c0=0.5031  c1=0.3644  c2=0.2123  c3=0.6421  c4=0.5703
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 89 -------------
+global test acc 0.4260 | test loss 1.3991 | train loss 1.4914 | val acc 0.4874
+  per-client test acc: c0=0.4950  c1=0.3755  c2=0.2234  c3=0.6571  c4=0.5482
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 90 -------------
+global test acc 0.4447 | test loss 1.4390 | train loss 1.5100 | val acc 0.4747
+  per-client test acc: c0=0.4851  c1=0.3700  c2=0.2245  c3=0.5940  c4=0.6814
+round time 25.7s (train+aggregate 18.7s)
+
+------------- Round 91 -------------
+global test acc 0.4352 | test loss 1.4249 | train loss 1.4923 | val acc 0.4979
+  per-client test acc: c0=0.5174  c1=0.4115  c2=0.2073  c3=0.6647  c4=0.5455
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 92 -------------
+global test acc 0.4333 | test loss 1.4603 | train loss 1.5019 | val acc 0.4960
+  per-client test acc: c0=0.4608  c1=0.4190  c2=0.2090  c3=0.6241  c4=0.6051
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 93 -------------
+global test acc 0.4614 | test loss 1.3665 | train loss 1.5318 | val acc 0.4814
+  per-client test acc: c0=0.5461  c1=0.4581  c2=0.2373  c3=0.6632  c4=0.5549
+round time 26.1s (train+aggregate 19.1s)
+
+------------- Round 94 -------------
+global test acc 0.4440 | test loss 1.3954 | train loss 1.4989 | val acc 0.4988
+  per-client test acc: c0=0.5355  c1=0.4531  c2=0.2118  c3=0.6737  c4=0.5141
+round time 26.1s (train+aggregate 19.0s)
+
+------------- Round 95 -------------
+global test acc 0.4306 | test loss 1.4194 | train loss 1.4881 | val acc 0.4781
+  per-client test acc: c0=0.4589  c1=0.3526  c2=0.2384  c3=0.6015  c4=0.6406
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 96 -------------
+global test acc 0.4238 | test loss 1.4151 | train loss 1.4748 | val acc 0.5120
+  per-client test acc: c0=0.5000  c1=0.4444  c2=0.2040  c3=0.6632  c4=0.4786
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 97 -------------
+global test acc 0.4029 | test loss 1.4578 | train loss 1.5328 | val acc 0.4761
+  per-client test acc: c0=0.4377  c1=0.3904  c2=0.2156  c3=0.6376  c4=0.5007
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 98 -------------
+global test acc 0.4517 | test loss 1.4949 | train loss 1.5184 | val acc 0.5045
+  per-client test acc: c0=0.4707  c1=0.4562  c2=0.2079  c3=0.6722  c4=0.6225
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 99 -------------
+global test acc 0.4007 | test loss 1.4498 | train loss 1.4905 | val acc 0.5006
+  per-client test acc: c0=0.4514  c1=0.4264  c2=0.1929  c3=0.6872  c4=0.4418
+round time 25.8s (train+aggregate 18.7s)
+
+------------- Round 100 -------------
+global test acc 0.4351 | test loss 1.3699 | train loss 1.4688 | val acc 0.5084
+  per-client test acc: c0=0.5280  c1=0.4829  c2=0.1951  c3=0.6812  c4=0.4639
+round time 26.1s (train+aggregate 19.1s)
+
+------------- Round 101 -------------
+global test acc 0.4448 | test loss 1.3882 | train loss 1.4664 | val acc 0.5160
+  per-client test acc: c0=0.5168  c1=0.4531  c2=0.2073  c3=0.6782  c4=0.5415
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 102 -------------
+global test acc 0.4155 | test loss 1.3557 | train loss 1.4506 | val acc 0.5231
+  per-client test acc: c0=0.5243  c1=0.4842  c2=0.1901  c3=0.6947  c4=0.3722
+round time 25.6s (train+aggregate 18.7s)
+
+------------- Round 103 -------------
+global test acc 0.4450 | test loss 1.4564 | train loss 1.4923 | val acc 0.4843
+  per-client test acc: c0=0.4614  c1=0.4314  c2=0.2300  c3=0.6241  c4=0.6218
+round time 25.9s (train+aggregate 18.8s)
+
+------------- Round 104 -------------
+global test acc 0.4457 | test loss 1.3539 | train loss 1.4621 | val acc 0.5111
+  per-client test acc: c0=0.4950  c1=0.4246  c2=0.2506  c3=0.6586  c4=0.5562
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 105 -------------
+global test acc 0.4226 | test loss 1.4017 | train loss 1.4635 | val acc 0.5129
+  per-client test acc: c0=0.4900  c1=0.3811  c2=0.2206  c3=0.6436  c4=0.5402
+round time 25.9s (train+aggregate 18.8s)
+
+------------- Round 106 -------------
+global test acc 0.4146 | test loss 1.3252 | train loss 1.4752 | val acc 0.4994
+  per-client test acc: c0=0.4863  c1=0.3451  c2=0.2849  c3=0.6722  c4=0.4545
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 107 -------------
+global test acc 0.4472 | test loss 1.3705 | train loss 1.4617 | val acc 0.4991
+  per-client test acc: c0=0.4371  c1=0.4097  c2=0.2600  c3=0.6466  c4=0.6359
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 108 -------------
+global test acc 0.4546 | test loss 1.3944 | train loss 1.4529 | val acc 0.5039
+  per-client test acc: c0=0.4763  c1=0.4302  c2=0.2561  c3=0.6150  c4=0.6258
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 109 -------------
+global test acc 0.4745 | test loss 1.3873 | train loss 1.4722 | val acc 0.5248
+  per-client test acc: c0=0.5218  c1=0.4780  c2=0.2339  c3=0.6722  c4=0.6225
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 110 -------------
+global test acc 0.4503 | test loss 1.4127 | train loss 1.4583 | val acc 0.5196
+  per-client test acc: c0=0.4695  c1=0.4631  c2=0.2223  c3=0.6421  c4=0.6058
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 111 -------------
+global test acc 0.5008 | test loss 1.2926 | train loss 1.4203 | val acc 0.5316
+  per-client test acc: c0=0.5131  c1=0.4904  c2=0.3054  c3=0.6436  c4=0.6714
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 112 -------------
+global test acc 0.4933 | test loss 1.3411 | train loss 1.4372 | val acc 0.5254
+  per-client test acc: c0=0.5722  c1=0.4711  c2=0.2583  c3=0.6226  c4=0.6586
+round time 25.7s (train+aggregate 18.7s)
+
+------------- Round 113 -------------
+global test acc 0.4794 | test loss 1.3144 | train loss 1.4461 | val acc 0.5222
+  per-client test acc: c0=0.5847  c1=0.4500  c2=0.2633  c3=0.6722  c4=0.5730
+round time 25.7s (train+aggregate 18.7s)
+
+------------- Round 114 -------------
+global test acc 0.4519 | test loss 1.4278 | train loss 1.4808 | val acc 0.5127
+  per-client test acc: c0=0.4751  c1=0.4643  c2=0.2190  c3=0.6917  c4=0.5884
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 115 -------------
+global test acc 0.4343 | test loss 1.4415 | train loss 1.4770 | val acc 0.5078
+  per-client test acc: c0=0.4689  c1=0.4382  c2=0.2206  c3=0.6977  c4=0.5335
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 116 -------------
+global test acc 0.4542 | test loss 1.3818 | train loss 1.4396 | val acc 0.5308
+  per-client test acc: c0=0.5455  c1=0.4562  c2=0.2206  c3=0.6722  c4=0.5388
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 117 -------------
+global test acc 0.4524 | test loss 1.3610 | train loss 1.4368 | val acc 0.5246
+  per-client test acc: c0=0.4981  c1=0.4320  c2=0.2639  c3=0.6932  c4=0.5455
+round time 26.0s (train+aggregate 19.0s)
+
+------------- Round 118 -------------
+global test acc 0.4667 | test loss 1.3447 | train loss 1.4531 | val acc 0.5201
+  per-client test acc: c0=0.5890  c1=0.5016  c2=0.2400  c3=0.6797  c4=0.4766
+round time 26.0s (train+aggregate 18.9s)
+
+------------- Round 119 -------------
+global test acc 0.4486 | test loss 1.2953 | train loss 1.4094 | val acc 0.5290
+  per-client test acc: c0=0.5928  c1=0.4761  c2=0.2688  c3=0.6677  c4=0.3835
+round time 25.8s (train+aggregate 18.9s)
+
+------------- Round 120 -------------
+global test acc 0.4479 | test loss 1.3584 | train loss 1.4222 | val acc 0.5361
+  per-client test acc: c0=0.5766  c1=0.4761  c2=0.2245  c3=0.6797  c4=0.4458
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 121 -------------
+global test acc 0.4843 | test loss 1.3397 | train loss 1.4263 | val acc 0.5400
+  per-client test acc: c0=0.5479  c1=0.5245  c2=0.2533  c3=0.7008  c4=0.5549
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 122 -------------
+global test acc 0.4780 | test loss 1.3643 | train loss 1.4147 | val acc 0.5436
+  per-client test acc: c0=0.4888  c1=0.5202  c2=0.2655  c3=0.6857  c4=0.5850
+round time 25.9s (train+aggregate 18.9s)
+
+------------- Round 123 -------------
+global test acc 0.4650 | test loss 1.3727 | train loss 1.4376 | val acc 0.5221
+  per-client test acc: c0=0.5125  c1=0.4531  c2=0.2589  c3=0.6677  c4=0.5857
+round time 25.8s (train+aggregate 18.8s)
+
+------------- Round 124 -------------
+global test acc 0.4292 | test loss 1.4073 | train loss 1.4593 | val acc 0.5255
+  per-client test acc: c0=0.5535  c1=0.4891  c2=0.1940  c3=0.6992  c4=0.3949
+round time 25.7s (train+aggregate 18.8s)
+
+------------- Round 125 -------------
+global test acc 0.5004 | test loss 1.2788 | train loss 1.4235 | val acc 0.5310
+  per-client test acc: c0=0.3985  c1=0.3830  c2=0.4917  c3=0.6752  c4=0.6693
+round time 25.6s (train+aggregate 18.7s)
+
+------------- Round 126 -------------
+global test acc 0.4309 | test loss 1.3558 | train loss 1.4217 | val acc 0.5276
+  per-client test acc: c0=0.4919  c1=0.4618  c2=0.2572  c3=0.6992  c4=0.4224
+round time 25.6s (train+aggregate 18.7s)
+
+------------- Round 127 -------------
+global test acc 0.4593 | test loss 1.3204 | train loss 1.4125 | val acc 0.5366
+  per-client test acc: c0=0.4645  c1=0.4792  c2=0.3176  c3=0.7053  c4=0.4940
+round time 29.6s (train+aggregate 21.3s)
+
+------------- Round 128 -------------
+global test acc 0.4731 | test loss 1.3123 | train loss 1.3950 | val acc 0.5523
+  per-client test acc: c0=0.5336  c1=0.5196  c2=0.2594  c3=0.7038  c4=0.5134
+round time 27.1s (train+aggregate 19.7s)
+
+------------- Round 129 -------------
+global test acc 0.4645 | test loss 1.2976 | train loss 1.4378 | val acc 0.5333
+  per-client test acc: c0=0.5996  c1=0.5140  c2=0.2683  c3=0.6962  c4=0.3996
+round time 27.2s (train+aggregate 19.7s)
+
+------------- Round 130 -------------
+global test acc 0.4822 | test loss 1.2953 | train loss 1.3821 | val acc 0.5600
+  per-client test acc: c0=0.5922  c1=0.5493  c2=0.2589  c3=0.6902  c4=0.4685
+round time 29.5s (train+aggregate 22.1s)
+
+------------- Round 131 -------------
+global test acc 0.4464 | test loss 1.3720 | train loss 1.4192 | val acc 0.5433
+  per-client test acc: c0=0.5293  c1=0.4507  c2=0.2195  c3=0.6617  c4=0.5308
+round time 26.8s (train+aggregate 19.5s)
+
+------------- Round 132 -------------
+global test acc 0.4840 | test loss 1.3241 | train loss 1.4011 | val acc 0.5584
+  per-client test acc: c0=0.5455  c1=0.5624  c2=0.2395  c3=0.7158  c4=0.5254
+round time 26.7s (train+aggregate 19.4s)
+
+------------- Round 133 -------------
+global test acc 0.4653 | test loss 1.3660 | train loss 1.4293 | val acc 0.5362
+  per-client test acc: c0=0.4813  c1=0.4941  c2=0.2799  c3=0.6932  c4=0.5395
+round time 26.2s (train+aggregate 19.1s)
+
+------------- Round 134 -------------
+global test acc 0.4260 | test loss 1.4425 | train loss 1.4417 | val acc 0.5225
+  per-client test acc: c0=0.4054  c1=0.4612  c2=0.2373  c3=0.6872  c4=0.5221
+round time 26.2s (train+aggregate 19.1s)
+
+------------- Round 135 -------------
+global test acc 0.4432 | test loss 1.4065 | train loss 1.4457 | val acc 0.5139
+  per-client test acc: c0=0.3979  c1=0.4606  c2=0.2528  c3=0.6767  c4=0.5991
+round time 24.9s (train+aggregate 18.3s)
+
+------------- Round 136 -------------
+global test acc 0.4825 | test loss 1.3361 | train loss 1.3921 | val acc 0.5593
+  per-client test acc: c0=0.4601  c1=0.5090  c2=0.2871  c3=0.6947  c4=0.6191
+round time 25.2s (train+aggregate 18.2s)
+
+------------- Round 137 -------------
+global test acc 0.4591 | test loss 1.3894 | train loss 1.4245 | val acc 0.5202
+  per-client test acc: c0=0.4365  c1=0.4227  c2=0.2589  c3=0.6406  c4=0.6834
+round time 25.0s (train+aggregate 18.3s)
+
+------------- Round 138 -------------
+global test acc 0.4916 | test loss 1.3169 | train loss 1.3938 | val acc 0.5604
+  per-client test acc: c0=0.5685  c1=0.5376  c2=0.2738  c3=0.6932  c4=0.5328
+round time 25.7s (train+aggregate 18.8s)
+
+------------- Round 139 -------------
+global test acc 0.4763 | test loss 1.2859 | train loss 1.3855 | val acc 0.5576
+  per-client test acc: c0=0.4782  c1=0.4705  c2=0.3315  c3=0.7068  c4=0.5529
+round time 26.6s (train+aggregate 19.3s)
+
+------------- Round 140 -------------
+global test acc 0.4919 | test loss 1.3173 | train loss 1.3919 | val acc 0.5579
+  per-client test acc: c0=0.4670  c1=0.4935  c2=0.2910  c3=0.7128  c4=0.6613
+round time 26.5s (train+aggregate 19.6s)
+
+------------- Round 141 -------------
+global test acc 0.5033 | test loss 1.2664 | train loss 1.3717 | val acc 0.5679
+  per-client test acc: c0=0.5504  c1=0.5444  c2=0.3348  c3=0.7158  c4=0.5174
+round time 27.9s (train+aggregate 19.8s)
+
+------------- Round 142 -------------
+global test acc 0.4774 | test loss 1.3248 | train loss 1.3999 | val acc 0.5560
+  per-client test acc: c0=0.5847  c1=0.5568  c2=0.2688  c3=0.6932  c4=0.4324
+round time 27.5s (train+aggregate 20.1s)
+
+------------- Round 143 -------------
+global test acc 0.4912 | test loss 1.3120 | train loss 1.3784 | val acc 0.5725
+  per-client test acc: c0=0.5567  c1=0.5525  c2=0.2561  c3=0.7083  c4=0.5422
+round time 30.7s (train+aggregate 22.8s)
+
+------------- Round 144 -------------
+global test acc 0.5113 | test loss 1.2578 | train loss 1.3557 | val acc 0.5791
+  per-client test acc: c0=0.5554  c1=0.5760  c2=0.3764  c3=0.7218  c4=0.4632
+round time 30.6s (train+aggregate 22.7s)
+
+------------- Round 145 -------------
+global test acc 0.4737 | test loss 1.3480 | train loss 1.3835 | val acc 0.5663
+  per-client test acc: c0=0.4788  c1=0.5295  c2=0.2705  c3=0.7173  c4=0.5448
+round time 26.1s (train+aggregate 19.1s)
+
+------------- Round 146 -------------
+global test acc 0.4886 | test loss 1.3080 | train loss 1.3980 | val acc 0.5485
+  per-client test acc: c0=0.5025  c1=0.5040  c2=0.3398  c3=0.7143  c4=0.5361
+round time 25.7s (train+aggregate 18.8s)
+
+------------- Round 147 -------------
+global test acc 0.3946 | test loss 1.5533 | train loss 1.5405 | val acc 0.4679
+  per-client test acc: c0=0.3910  c1=0.4395  c2=0.2029  c3=0.7293  c4=0.4324
+round time 25.4s (train+aggregate 18.5s)
+
+------------- Round 148 -------------
+global test acc 0.3930 | test loss 1.5349 | train loss 1.5073 | val acc 0.4784
+  per-client test acc: c0=0.3456  c1=0.4215  c2=0.2178  c3=0.6842  c4=0.4953
+round time 25.5s (train+aggregate 18.6s)
+
+------------- Round 149 -------------
+global test acc 0.4678 | test loss 1.3281 | train loss 1.3665 | val acc 0.5675
+  per-client test acc: c0=0.5087  c1=0.5202  c2=0.2755  c3=0.7173  c4=0.4886
+round time 25.8s (train+aggregate 18.7s)
+
+------------- Round 150 -------------
+global test acc 0.4951 | test loss 1.3126 | train loss 1.3813 | val acc 0.5407
+  per-client test acc: c0=0.4321  c1=0.4699  c2=0.3487  c3=0.6511  c4=0.6975
+round time 25.5s (train+aggregate 18.7s)
+
+------------- Round 151 -------------
+global test acc 0.4820 | test loss 1.2758 | train loss 1.3663 | val acc 0.5678
+  per-client test acc: c0=0.5330  c1=0.5649  c2=0.3149  c3=0.7248  c4=0.4317
+round time 25.1s (train+aggregate 18.4s)
+
+------------- Round 152 -------------
+global test acc 0.4794 | test loss 1.3216 | train loss 1.3909 | val acc 0.5595
+  per-client test acc: c0=0.5012  c1=0.5810  c2=0.2611  c3=0.7218  c4=0.5020
+round time 25.2s (train+aggregate 18.4s)
+
+------------- Round 153 -------------
+global test acc 0.4799 | test loss 1.2831 | train loss 1.3985 | val acc 0.5457
+  per-client test acc: c0=0.5430  c1=0.5537  c2=0.3010  c3=0.7173  c4=0.4431
+round time 24.9s (train+aggregate 18.1s)
+
+------------- Round 154 -------------
+global test acc 0.4914 | test loss 1.3500 | train loss 1.3879 | val acc 0.5691
+  per-client test acc: c0=0.5809  c1=0.5202  c2=0.2528  c3=0.6737  c4=0.5710
+round time 24.8s (train+aggregate 18.1s)
+
+------------- Round 155 -------------
+global test acc 0.4844 | test loss 1.3049 | train loss 1.3689 | val acc 0.5728
+  per-client test acc: c0=0.5760  c1=0.5661  c2=0.2744  c3=0.7128  c4=0.4498
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 156 -------------
+global test acc 0.4772 | test loss 1.3462 | train loss 1.3826 | val acc 0.5556
+  per-client test acc: c0=0.4377  c1=0.4947  c2=0.2938  c3=0.7173  c4=0.6151
+round time 25.0s (train+aggregate 18.2s)
+
+------------- Round 157 -------------
+global test acc 0.5210 | test loss 1.2611 | train loss 1.3507 | val acc 0.5819
+  per-client test acc: c0=0.5143  c1=0.5605  c2=0.3642  c3=0.7203  c4=0.5863
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 158 -------------
+global test acc 0.5046 | test loss 1.2829 | train loss 1.3825 | val acc 0.5509
+  per-client test acc: c0=0.4502  c1=0.4817  c2=0.3753  c3=0.6752  c4=0.6680
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 159 -------------
+global test acc 0.4936 | test loss 1.2512 | train loss 1.3555 | val acc 0.5700
+  per-client test acc: c0=0.4271  c1=0.4811  c2=0.4207  c3=0.7128  c4=0.5689
+round time 25.2s (train+aggregate 18.4s)
+
+------------- Round 160 -------------
+global test acc 0.4978 | test loss 1.2518 | train loss 1.3703 | val acc 0.5743
+  per-client test acc: c0=0.5697  c1=0.4879  c2=0.3725  c3=0.7083  c4=0.4886
+round time 25.2s (train+aggregate 18.4s)
+
+------------- Round 161 -------------
+global test acc 0.5058 | test loss 1.2643 | train loss 1.3395 | val acc 0.5800
+  per-client test acc: c0=0.4944  c1=0.5655  c2=0.3531  c3=0.7233  c4=0.5415
+round time 25.3s (train+aggregate 18.4s)
+
+------------- Round 162 -------------
+global test acc 0.4804 | test loss 1.3020 | train loss 1.3665 | val acc 0.5752
+  per-client test acc: c0=0.5722  c1=0.5798  c2=0.2428  c3=0.7038  c4=0.4618
+round time 25.4s (train+aggregate 18.6s)
+
+------------- Round 163 -------------
+global test acc 0.4717 | test loss 1.3306 | train loss 1.3764 | val acc 0.5670
+  per-client test acc: c0=0.5691  c1=0.5363  c2=0.2644  c3=0.7008  c4=0.4458
+round time 25.2s (train+aggregate 18.4s)
+
+------------- Round 164 -------------
+global test acc 0.4997 | test loss 1.3041 | train loss 1.3533 | val acc 0.5806
+  per-client test acc: c0=0.5224  c1=0.5599  c2=0.2899  c3=0.7143  c4=0.5683
+round time 25.3s (train+aggregate 18.5s)
+
+------------- Round 165 -------------
+global test acc 0.4985 | test loss 1.2599 | train loss 1.3306 | val acc 0.5942
+  per-client test acc: c0=0.5486  c1=0.5692  c2=0.3415  c3=0.7128  c4=0.4625
+round time 25.2s (train+aggregate 18.4s)
+
+------------- Round 166 -------------
+global test acc 0.5007 | test loss 1.2848 | train loss 1.3314 | val acc 0.5915
+  per-client test acc: c0=0.5461  c1=0.5934  c2=0.3237  c3=0.7128  c4=0.4712
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 167 -------------
+global test acc 0.4971 | test loss 1.3026 | train loss 1.3467 | val acc 0.5839
+  per-client test acc: c0=0.5592  c1=0.6182  c2=0.2722  c3=0.7218  c4=0.4712
+round time 25.1s (train+aggregate 18.4s)
+
+------------- Round 168 -------------
+global test acc 0.5340 | test loss 1.2541 | train loss 1.3259 | val acc 0.5950
+  per-client test acc: c0=0.5000  c1=0.5239  c2=0.5144  c3=0.7008  c4=0.5308
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 169 -------------
+global test acc 0.5454 | test loss 1.2344 | train loss 1.3225 | val acc 0.6027
+  per-client test acc: c0=0.5268  c1=0.5208  c2=0.4612  c3=0.6932  c4=0.6278
+round time 25.0s (train+aggregate 18.3s)
+
+------------- Round 170 -------------
+global test acc 0.4955 | test loss 1.2590 | train loss 1.3254 | val acc 0.6044
+  per-client test acc: c0=0.5517  c1=0.5133  c2=0.3570  c3=0.7068  c4=0.4893
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 171 -------------
+global test acc 0.4838 | test loss 1.3117 | train loss 1.3670 | val acc 0.5806
+  per-client test acc: c0=0.5735  c1=0.5388  c2=0.2378  c3=0.7023  c4=0.5281
+round time 25.0s (train+aggregate 18.3s)
+
+------------- Round 172 -------------
+global test acc 0.5054 | test loss 1.2364 | train loss 1.3343 | val acc 0.5922
+  per-client test acc: c0=0.5978  c1=0.5580  c2=0.3442  c3=0.7038  c4=0.4558
+round time 25.0s (train+aggregate 18.3s)
+
+------------- Round 173 -------------
+global test acc 0.5194 | test loss 1.2888 | train loss 1.3285 | val acc 0.5906
+  per-client test acc: c0=0.5118  c1=0.5301  c2=0.4074  c3=0.7008  c4=0.5703
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 174 -------------
+global test acc 0.4741 | test loss 1.3052 | train loss 1.3557 | val acc 0.5758
+  per-client test acc: c0=0.4745  c1=0.5109  c2=0.2888  c3=0.7323  c4=0.5428
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 175 -------------
+global test acc 0.5063 | test loss 1.2901 | train loss 1.3304 | val acc 0.5952
+  per-client test acc: c0=0.5012  c1=0.5115  c2=0.3215  c3=0.6977  c4=0.6439
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 176 -------------
+global test acc 0.5703 | test loss 1.2089 | train loss 1.3065 | val acc 0.6154
+  per-client test acc: c0=0.5012  c1=0.5258  c2=0.5782  c3=0.6947  c4=0.6278
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 177 -------------
+global test acc 0.5134 | test loss 1.2469 | train loss 1.3166 | val acc 0.6058
+  per-client test acc: c0=0.4807  c1=0.4730  c2=0.4784  c3=0.7113  c4=0.5462
+round time 25.0s (train+aggregate 18.3s)
+
+------------- Round 178 -------------
+global test acc 0.5262 | test loss 1.2185 | train loss 1.3193 | val acc 0.6037
+  per-client test acc: c0=0.5890  c1=0.5996  c2=0.4063  c3=0.7098  c4=0.4424
+round time 25.1s (train+aggregate 18.4s)
+
+------------- Round 179 -------------
+global test acc 0.5281 | test loss 1.2390 | train loss 1.3238 | val acc 0.6018
+  per-client test acc: c0=0.4707  c1=0.5034  c2=0.4263  c3=0.7098  c4=0.6586
+round time 25.0s (train+aggregate 18.3s)
+
+------------- Round 180 -------------
+global test acc 0.5618 | test loss 1.1944 | train loss 1.3052 | val acc 0.6240
+  per-client test acc: c0=0.5585  c1=0.5947  c2=0.4601  c3=0.7188  c4=0.5830
+round time 25.0s (train+aggregate 18.2s)
+
+------------- Round 181 -------------
+global test acc 0.5088 | test loss 1.2998 | train loss 1.3457 | val acc 0.5911
+  per-client test acc: c0=0.5056  c1=0.4575  c2=0.3725  c3=0.6617  c4=0.6640
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 182 -------------
+global test acc 0.5671 | test loss 1.1749 | train loss 1.3133 | val acc 0.6235
+  per-client test acc: c0=0.5672  c1=0.5518  c2=0.5776  c3=0.6977  c4=0.5127
+round time 25.0s (train+aggregate 18.3s)
+
+------------- Round 183 -------------
+global test acc 0.4862 | test loss 1.2390 | train loss 1.3291 | val acc 0.5937
+  per-client test acc: c0=0.5330  c1=0.5773  c2=0.3115  c3=0.7248  c4=0.4424
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 184 -------------
+global test acc 0.4918 | test loss 1.2925 | train loss 1.3393 | val acc 0.5945
+  per-client test acc: c0=0.4981  c1=0.5593  c2=0.3121  c3=0.7248  c4=0.5254
+round time 25.3s (train+aggregate 18.6s)
+
+------------- Round 185 -------------
+global test acc 0.4960 | test loss 1.2435 | train loss 1.3360 | val acc 0.5936
+  per-client test acc: c0=0.4682  c1=0.4935  c2=0.3991  c3=0.7323  c4=0.5402
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 186 -------------
+global test acc 0.5234 | test loss 1.2122 | train loss 1.3030 | val acc 0.6168
+  per-client test acc: c0=0.4851  c1=0.5214  c2=0.4734  c3=0.7263  c4=0.5368
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 187 -------------
+global test acc 0.4992 | test loss 1.2818 | train loss 1.3353 | val acc 0.5980
+  per-client test acc: c0=0.4932  c1=0.5196  c2=0.3697  c3=0.6947  c4=0.5529
+round time 25.1s (train+aggregate 18.3s)
+
+------------- Round 188 -------------
+global test acc 0.4467 | test loss 1.3173 | train loss 1.3617 | val acc 0.5708
+  per-client test acc: c0=0.4421  c1=0.3985  c2=0.3487  c3=0.7053  c4=0.5067
+round time 25.1s (train+aggregate 18.4s)
+
+------------- Round 189 -------------
+global test acc 0.4347 | test loss 1.3058 | train loss 1.3516 | val acc 0.5753
+  per-client test acc: c0=0.4857  c1=0.4811  c2=0.2722  c3=0.7293  c4=0.3949
+round time 25.0s (train+aggregate 18.2s)
+
+------------- Round 190 -------------
+global test acc 0.4951 | test loss 1.2743 | train loss 1.3200 | val acc 0.5967
+  per-client test acc: c0=0.5361  c1=0.5667  c2=0.3442  c3=0.6992  c4=0.4652
+round time 25.0s (train+aggregate 18.3s)
+
+------------- Round 191 -------------
+global test acc 0.4802 | test loss 1.2704 | train loss 1.3308 | val acc 0.5927
+  per-client test acc: c0=0.4583  c1=0.4916  c2=0.3736  c3=0.7158  c4=0.5154
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 192 -------------
+global test acc 0.5292 | test loss 1.2486 | train loss 1.3338 | val acc 0.5995
+  per-client test acc: c0=0.5318  c1=0.4811  c2=0.4651  c3=0.6707  c4=0.5930
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 193 -------------
+global test acc 0.4921 | test loss 1.2775 | train loss 1.3328 | val acc 0.6001
+  per-client test acc: c0=0.5062  c1=0.5102  c2=0.3703  c3=0.6917  c4=0.5154
+round time 25.0s (train+aggregate 18.2s)
+
+------------- Round 194 -------------
+global test acc 0.5372 | test loss 1.2219 | train loss 1.2882 | val acc 0.6268
+  per-client test acc: c0=0.5380  c1=0.5295  c2=0.5211  c3=0.6932  c4=0.4946
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 195 -------------
+global test acc 0.5433 | test loss 1.1820 | train loss 1.2736 | val acc 0.6284
+  per-client test acc: c0=0.5274  c1=0.5711  c2=0.5615  c3=0.7188  c4=0.4304
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 196 -------------
+global test acc 0.4766 | test loss 1.2553 | train loss 1.3073 | val acc 0.6041
+  per-client test acc: c0=0.4888  c1=0.5525  c2=0.3625  c3=0.7444  c4=0.4003
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 197 -------------
+global test acc 0.5070 | test loss 1.2541 | train loss 1.3200 | val acc 0.6034
+  per-client test acc: c0=0.4658  c1=0.4811  c2=0.3775  c3=0.7083  c4=0.6459
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 198 -------------
+global test acc 0.5249 | test loss 1.2134 | train loss 1.2938 | val acc 0.6275
+  per-client test acc: c0=0.4732  c1=0.5258  c2=0.4873  c3=0.7263  c4=0.5355
+round time 24.8s (train+aggregate 18.1s)
+
+------------- Round 199 -------------
+global test acc 0.5468 | test loss 1.2134 | train loss 1.2938 | val acc 0.6294
+  per-client test acc: c0=0.5716  c1=0.5748  c2=0.4035  c3=0.6992  c4=0.5950
+round time 24.9s (train+aggregate 18.2s)
+
+------------- Round 200 -------------
+global test acc 0.5201 | test loss 1.2439 | train loss 1.3202 | val acc 0.6044
+  per-client test acc: c0=0.5199  c1=0.5469  c2=0.3575  c3=0.7143  c4=0.6011
+round time 24.9s (train+aggregate 18.1s)
+
+Final global test acc (round 200): 0.5201
+Best val acc 0.6294 at round 199
+Average time per round: 25.8s
+File path: ../results/PathMNIST_FedProx_test_0.h5
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading history steps 200-200, summary, console lines 1023-1030
+wandb: 
+wandb: Run history:
+wandb:              best_val_acc_so_far ▁▁▁▂▂▂▂▂▃▃▄▄▅▅▅▅▆▆▆▆▆▆▆▆▆▇▇▇▇▇▇▇▇▇██████
+wandb:            best_val_round_so_far ▁▁▂▂▂▂▂▂▂▃▃▃▃▄▄▄▄▄▄▄▅▅▅▅▆▆▆▆▆▆▇▇▇▇▇▇▇███
+wandb:    client_0_corrupted_pred_noisy ██▇█▇▇▅▅▅▅▄▄▃▃▂▄▂▂▃▂▁▂▃▂▂▂▁▃▁▁▂▃▂▁▁▂▂▁▂▁
+wandb: client_0_corrupted_pred_original ▁▁▁▁▂▄▄▄▅▅▅▄▅▅▅▆▇▇▆▆▇▇▆▇▆▇▇▇▆▆█▇▇██▇▇▇█▇
+wandb:    client_0_corrupted_pred_other █████▇▆▅▅▅▃▄▄▄▄▄▂▃▃▂▂▂▂▂▂▂▂▂▃▃▁▂▂▂▁▁▂▂▂▁
+wandb:                  client_0_cosine ▁▂▃▂▄▅▅▅▅▄▅▇▆▅▄▃▆▄▁▅▅▄▅▁▇▃▅▆▇▂▆▅▄▅▆█▇▆▆▃
+wandb:              client_0_cosine_loo █▃▃▃▃▃▃▂▂▂▂▂▂▁▁▂▁▂▂▁▁▂▁▂▂▂▂▂▁▂▁▂▁▂▂▂▁▂▂▁
+wandb:                client_0_test_acc ▁▁▁▂▂▄▅▅▄▅▅▆▆▆▆▆▇▇▆▆▇▇██▆█▇▅▇▇▆▇▇▇██▆▆▇▇
+wandb:               client_0_test_loss ▇▇██▇▇▇▇▇▆▅▅▅▅▃▄▄▄▄▃▄▃▄▂▂▃▃▃▃▂▅▁▂▁▂▂▁▁▁▂
+wandb:              client_0_train_loss ▇▆█▇▇▅▅▄▃▂▃▃▂▃▂▂▂▃▃▂▂▂▂▃▂▃▂▁▃▁▄▃▂▆▃▄▄▄▄▃
+wandb:                              +35 ...
+wandb: 
+wandb: Run summary:
+wandb:              best_val_acc_so_far 0.62945
+wandb:            best_val_round_so_far 199
+wandb:    client_0_corrupted_pred_noisy 0.04675
+wandb: client_0_corrupted_pred_original 0.63515
+wandb:    client_0_corrupted_pred_other 0.3181
+wandb:                  client_0_cosine 0.38548
+wandb:              client_0_cosine_loo -0.46442
+wandb:                client_0_test_acc 0.51993
+wandb:               client_0_test_loss 1.41972
+wandb:              client_0_train_loss 2.05095
+wandb:                              +35 ...
+wandb: 
+wandb: 🚀 View run fedprox_mu1.0_seed0 at: https://forge.coreweave.com/wandb/sonishifa7-jk-lakshmipat-university/fl-pathmnist-noisy/runs/th13mcnt
+wandb: ⭐️ View project at: https://forge.coreweave.com/wandb/sonishifa7-jk-lakshmipat-university/fl-pathmnist-noisy
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20261112_115100-th13mcnt/logs
+
+Average time cost: 5171.54s.
+Length:  201
+std for best accuracy: 0.0
+mean for best accuracy: 0.5703342618384402
+All done!
+
+Storage on cpu
+-------------------------------------------------------------------------------
+Total Tensors: 516318506 	Used Memory: 1.07G
+-------------------------------------------------------------------------------

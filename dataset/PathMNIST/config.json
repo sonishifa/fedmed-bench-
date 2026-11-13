@@ -1,0 +1,145 @@
+{
+  "dataset": "PathMNIST",
+  "size": 28,
+  "num_clients": 5,
+  "num_classes": 9,
+  "partition": "dir",
+  "alpha": 0.3,
+  "split_seed": 0,
+  "normalization": "x\/255.0 -> float32 in [0,1], CHW, no mean\/std",
+  "test_allocation": "per-class, proportional to client's share of that class in train",
+  "official_split_sizes": {
+    "train": 89996,
+    "val": 10004,
+    "test": 7180
+  },
+  "validation": "official val split kept separate (not partitioned, not used in training)",
+  "train_samples_per_client": [
+    24067,
+    20963,
+    14883,
+    11055,
+    19028
+  ],
+  "test_samples_per_client": [
+    1606,
+    1611,
+    1804,
+    665,
+    1494
+  ],
+  "train_class_counts": [
+    [
+      3,
+      570,
+      2324,
+      7744,
+      503,
+      2,
+      270,
+      5762,
+      6889
+    ],
+    [
+      76,
+      746,
+      2408,
+      184,
+      233,
+      1084,
+      6795,
+      3569,
+      5868
+    ],
+    [
+      9283,
+      2670,
+      97,
+      57,
+      1229,
+      1469,
+      13,
+      65,
+      0
+    ],
+    [
+      0,
+      4147,
+      5519,
+      369,
+      0,
+      81,
+      808,
+      4,
+      127
+    ],
+    [
+      4,
+      1376,
+      12,
+      2047,
+      6041,
+      9546,
+      0,
+      1,
+      1
+    ]
+  ],
+  "test_class_counts": [
+    [
+      0,
+      51,
+      76,
+      472,
+      65,
+      0,
+      25,
+      258,
+      659
+    ],
+    [
+      11,
+      66,
+      79,
+      11,
+      30,
+      53,
+      639,
+      160,
+      562
+    ],
+    [
+      1326,
+      238,
+      3,
+      3,
+      159,
+      71,
+      1,
+      3,
+      0
+    ],
+    [
+      0,
+      369,
+      181,
+      23,
+      0,
+      4,
+      76,
+      0,
+      12
+    ],
+    [
+      1,
+      123,
+      0,
+      125,
+      781,
+      464,
+      0,
+      0,
+      0
+    ]
+  ]
+}

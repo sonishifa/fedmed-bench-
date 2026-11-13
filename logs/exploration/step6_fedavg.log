@@ -1,0 +1,128 @@
+==================================================
+goal = test
+device = cpu
+device_id = 0
+dataset = PathMNIST
+num_classes = 9
+model = CNN
+batch_size = 32
+local_learning_rate = 0.01
+learning_rate_decay = False
+learning_rate_decay_gamma = 0.99
+global_rounds = 2
+top_cnt = 100
+local_epochs = 1
+algorithm = FedAvg
+join_ratio = 1.0
+random_join_ratio = False
+num_clients = 5
+prev = 0
+times = 1
+eval_gap = 1
+save_folder_name = items
+auto_break = False
+dlg_eval = False
+dlg_gap = 100
+batch_num_per_client = 2
+num_new_clients = 0
+fine_tuning_epoch_new = 0
+feature_dim = 512
+vocab_size = 80
+max_len = 200
+few_shot = 0
+client_drop_rate = 0.0
+train_slow_rate = 0.0
+send_slow_rate = 0.0
+time_select = False
+time_threthold = 10000
+beta = 0.0
+lamda = 1.0
+mu = 0.0
+K = 5
+p_learning_rate = 0.01
+M = 5
+itk = 4000
+alphaK = 1.0
+sigma = 1.0
+alpha = 1.0
+plocal_epochs = 1
+tau = 1.0
+fine_tuning_epochs = 10
+dr_learning_rate = 0.0
+L = 1.0
+noise_dim = 512
+generator_learning_rate = 0.005
+hidden_dim = 512
+server_epochs = 1000
+localize_feature_extractor = False
+server_learning_rate = 1.0
+eta = 1.0
+rand_percent = 80
+layer_idx = 2
+mentee_learning_rate = 0.005
+T_start = 0.95
+T_end = 0.98
+momentum = 0.1
+kl_weight = 0.0
+first_stage_bound = 0
+fedcross_alpha = 0.99
+collaberative_model_select_strategy = 1
+seed = 0
+noisy_client = 0
+noise_rate = 0.4
+wandb_project = fl-pathmnist-noisy
+run_tag = 
+==================================================
+
+============= Running time: 0th =============
+Creating server and clients ...
+FedAvgCNN(
+  (conv1): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(5, 5), stride=(1, 1))
+    (1): ReLU(inplace=True)
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), padding=0, dilation=1, ceil_mode=False)
+  )
+  (conv2): Sequential(
+    (0): Conv2d(32, 64, kernel_size=(5, 5), stride=(1, 1))
+    (1): ReLU(inplace=True)
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), padding=0, dilation=1, ceil_mode=False)
+  )
+  (fc1): Sequential(
+    (0): Linear(in_features=1024, out_features=512, bias=True)
+    (1): ReLU(inplace=True)
+  )
+  (fc): Linear(in_features=512, out_features=9, bias=True)
+)
+
+Join ratio / total clients: 1.0 / 5
+Finished creating server and clients.
+
+------------- Round 0 (initial model) -------------
+[noise] client 0: corrupted 9626/24067 training labels (rate=0.4, seed=0)
+global test acc 0.1033 | test loss 2.2023 | train loss 2.1991
+  per-client test acc: c0=0.0156  c1=0.3960  c2=0.0011  c3=0.1158  c4=0.0000
+
+------------- Round 1 -------------
+global test acc 0.1549 | test loss 2.3243 | train loss 2.2322
+  per-client test acc: c0=0.0143  c1=0.0590  c2=0.1214  c3=0.3624  c4=0.3574
+round time 17.5s (train+aggregate 13.9s)
+
+------------- Round 2 -------------
+global test acc 0.2004 | test loss 2.3506 | train loss 2.2382
+  per-client test acc: c0=0.0318  c1=0.0739  c2=0.1713  c3=0.5609  c4=0.3929
+round time 16.9s (train+aggregate 13.3s)
+
+Final global test acc (round 2): 0.2004
+Average time per round: 17.2s
+File path: ../results/PathMNIST_FedAvg_test_0.h5
+
+Average time cost: 41.57s.
+Length:  3
+std for best accuracy: 0.0
+mean for best accuracy: 0.20041782729805013
+All done!
+
+Storage on cpu
+-------------------------------------------------------------------------------
+Total Tensors: 467223177 	Used Memory: 904.03M
+-------------------------------------------------------------------------------

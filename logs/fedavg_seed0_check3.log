@@ -1,0 +1,179 @@
+==================================================
+goal = test
+device = cpu
+device_id = 0
+dataset = PathMNIST
+num_classes = 9
+model = CNN
+batch_size = 32
+local_learning_rate = 0.01
+learning_rate_decay = False
+learning_rate_decay_gamma = 0.99
+global_rounds = 3
+top_cnt = 100
+local_epochs = 1
+algorithm = FedAvg
+join_ratio = 1.0
+random_join_ratio = False
+num_clients = 5
+prev = 0
+times = 1
+eval_gap = 1
+save_folder_name = items
+auto_break = False
+dlg_eval = False
+dlg_gap = 100
+batch_num_per_client = 2
+num_new_clients = 0
+fine_tuning_epoch_new = 0
+feature_dim = 512
+vocab_size = 80
+max_len = 200
+few_shot = 0
+client_drop_rate = 0.0
+train_slow_rate = 0.0
+send_slow_rate = 0.0
+time_select = False
+time_threthold = 10000
+beta = 0.0
+lamda = 1.0
+mu = 0.0
+K = 5
+p_learning_rate = 0.01
+M = 5
+itk = 4000
+alphaK = 1.0
+sigma = 1.0
+alpha = 1.0
+plocal_epochs = 1
+tau = 1.0
+fine_tuning_epochs = 10
+dr_learning_rate = 0.0
+L = 1.0
+noise_dim = 512
+generator_learning_rate = 0.005
+hidden_dim = 512
+server_epochs = 1000
+localize_feature_extractor = False
+server_learning_rate = 1.0
+eta = 1.0
+rand_percent = 80
+layer_idx = 2
+mentee_learning_rate = 0.005
+T_start = 0.95
+T_end = 0.98
+momentum = 0.1
+kl_weight = 0.0
+first_stage_bound = 0
+fedcross_alpha = 0.99
+collaberative_model_select_strategy = 1
+seed = 0
+noisy_client = 0
+noise_rate = 0.4
+diag_noise_rate = 0.4
+wandb_project = fl-pathmnist-noisy
+run_tag = check3
+==================================================
+
+============= Running time: 0th =============
+Creating server and clients ...
+wandb: [wandb.login()] Loaded credentials for https://api.forge.coreweave.com from /Users/shifasoni/.netrc.
+wandb: Currently logged in as: sonishifa7 (sonishifa7-jk-lakshmipat-university) to https://api.forge.coreweave.com. Use `wandb login --relogin` to force relogin
+wandb: setting up run q1tw1x5y
+wandb: Tracking run with wandb version 0.31.0
+wandb: Run data is saved locally in /Users/shifasoni/Documents/fedmed-bench-/PFLlib/system/wandb/run-20261111_221123-q1tw1x5y
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fedavg_seed0_check3
+wandb: ⭐️ View project at https://forge.coreweave.com/wandb/sonishifa7-jk-lakshmipat-university/fl-pathmnist-noisy
+wandb: 🚀 View run at https://forge.coreweave.com/wandb/sonishifa7-jk-lakshmipat-university/fl-pathmnist-noisy/runs/q1tw1x5y
+W&B run: fedavg_seed0_check3 (q1tw1x5y)  ->  ../outputs/fedavg_seed0_check3_q1tw1x5y
+FedAvgCNN(
+  (conv1): Sequential(
+    (0): Conv2d(3, 32, kernel_size=(5, 5), stride=(1, 1))
+    (1): ReLU(inplace=True)
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), padding=0, dilation=1, ceil_mode=False)
+  )
+  (conv2): Sequential(
+    (0): Conv2d(32, 64, kernel_size=(5, 5), stride=(1, 1))
+    (1): ReLU(inplace=True)
+    (2): MaxPool2d(kernel_size=(2, 2), stride=(2, 2), padding=0, dilation=1, ceil_mode=False)
+  )
+  (fc1): Sequential(
+    (0): Linear(in_features=1024, out_features=512, bias=True)
+    (1): ReLU(inplace=True)
+  )
+  (fc): Linear(in_features=512, out_features=9, bias=True)
+)
+
+Join ratio / total clients: 1.0 / 5
+Finished creating server and clients.
+[noise] client 0: corrupted 9626/24067 training labels (rate=0.4, seed=0)
+
+------------- Round 0 (initial model) -------------
+global test acc 0.1033 | test loss 2.2023 | train loss 2.1991 | val acc 0.0883
+  per-client test acc: c0=0.0156  c1=0.3960  c2=0.0011  c3=0.1158  c4=0.0000
+
+------------- Round 1 -------------
+global test acc 0.1600 | test loss 2.3156 | train loss 2.2300 | val acc 0.1744
+  per-client test acc: c0=0.0318  c1=0.0571  c2=0.1480  c3=0.5579  c4=0.2463
+round time 18.2s (train+aggregate 13.7s)
+
+------------- Round 2 -------------
+global test acc 0.2004 | test loss 2.3397 | train loss 2.2415 | val acc 0.2060
+  per-client test acc: c0=0.0318  c1=0.0739  c2=0.1713  c3=0.5609  c4=0.3929
+round time 19.1s (train+aggregate 14.2s)
+
+------------- Round 3 -------------
+global test acc 0.2852 | test loss 2.0620 | train loss 2.0929 | val acc 0.2419
+  per-client test acc: c0=0.0573  c1=0.0844  c2=0.2284  c3=0.5609  c4=0.6928
+round time 20.3s (train+aggregate 15.2s)
+
+Final global test acc (round 3): 0.2852
+Best val acc 0.2419 at round 3
+Average time per round: 19.2s
+File path: ../results/PathMNIST_FedAvg_test_0.h5
+wandb: updating run metadata
+wandb: uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading history steps 3-3, summary, console lines 38-45
+wandb: 
+wandb: Run history:
+wandb:              best_val_acc_so_far ▁▅▆█
+wandb:            best_val_round_so_far ▁▃▆█
+wandb:    client_0_corrupted_pred_noisy █▁▅▃
+wandb: client_0_corrupted_pred_original ▁▃▂█
+wandb:    client_0_corrupted_pred_other ▆█▇▁
+wandb:                  client_0_cosine █▁▇
+wandb:              client_0_cosine_loo ▆▁█
+wandb:                client_0_test_acc ▁▄▄█
+wandb:               client_0_test_loss ▇▁█▃
+wandb:              client_0_train_loss ▂▁██
+wandb:                              +35 ...
+wandb: 
+wandb: Run summary:
+wandb:              best_val_acc_so_far 0.2419
+wandb:            best_val_round_so_far 3
+wandb:    client_0_corrupted_pred_noisy 0.1202
+wandb: client_0_corrupted_pred_original 0.02732
+wandb:    client_0_corrupted_pred_other 0.85248
+wandb:                  client_0_cosine 0.41949
+wandb:              client_0_cosine_loo 0.22568
+wandb:                client_0_test_acc 0.05729
+wandb:               client_0_test_loss 2.15381
+wandb:              client_0_train_loss 2.26733
+wandb:                              +35 ...
+wandb: 
+wandb: 🚀 View run fedavg_seed0_check3 at: https://forge.coreweave.com/wandb/sonishifa7-jk-lakshmipat-university/fl-pathmnist-noisy/runs/q1tw1x5y
+wandb: ⭐️ View project at: https://forge.coreweave.com/wandb/sonishifa7-jk-lakshmipat-university/fl-pathmnist-noisy
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20261111_221123-q1tw1x5y/logs
+
+Average time cost: 71.18s.
+Length:  4
+std for best accuracy: 0.0
+mean for best accuracy: 0.2852367688022284
+All done!
+
+Storage on cpu
+-------------------------------------------------------------------------------
+Total Tensors: 513402941 	Used Memory: 1.05G
+-------------------------------------------------------------------------------

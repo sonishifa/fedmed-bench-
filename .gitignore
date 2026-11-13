@@ -1,3 +1,22 @@
+# PFLlib defaults
 /results
 /system/models
 *__pycache__*
+
+# --- project additions ---
+# virtual env (lives one level up, listed in case the repo root moves)
+fl-env/
+# raw MedMNIST download and the generated per-client splits (regenerate with dataset/generate_PathMNIST.py)
+dataset/PathMNIST/rawdata/
+dataset/PathMNIST/train/
+dataset/PathMNIST/test/
+# dataset/PathMNIST/config.json and partition_indices.npz ARE committed (fixed partition, 1.5 MB)
+# model checkpoints (~4.4 MB per run); metrics.jsonl / metrics.csv / config.json / noise_indices.npz are committed
+*.pt
+# W&B local cache
+wandb/
+system/wandb/
+# incomplete run kept aside after an interruption (disclosed in README)
+outputs/incomplete/
+logs/incomplete/
+.DS_Store
